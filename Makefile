@@ -2,7 +2,7 @@ all: compile
 
 
 ### COMPILE
-compile: gen gen10 TestSSTableWriter.class
+compile: gen gen10 TestSSTableWriter.class TestSSTableWriter10.class ExecAsync.class ExecAsync10.class
 
 gen: gen.c
 	gcc -o gen gen.c
@@ -12,6 +12,15 @@ gen10: gen10.c
 
 TestSSTableWriter.class: TestSSTableWriter.java
 	javac -cp `./cassandra-classpath` TestSSTableWriter.java
+
+TestSSTableWriter10.class: TestSSTableWriter10.java
+	javac -cp `./cassandra-classpath` TestSSTableWriter10.java
+
+ExecAsync.class: ExecAsync.java
+	javac -cp `./cassandra-classpath` ExecAsync.java
+
+ExecAsync10.class: ExecAsync10.java
+	javac -cp `./cassandra-classpath` ExecAsync10.java
 
 
 
@@ -66,6 +75,31 @@ indirs: in/data10
 	- mkdir -p in/data10KB
 	- mkdir -p in/data1MB
 	- mkdir -p in/data10
+
+
+### CQLSH
+ddl:
+	cqlsh -e "CREATE KEYSPACE IF NOT EXISTS test WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'};"
+	cqlsh -e "CREATE TABLE IF NOT EXISTS test100b(pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));"
+	cqlsh -e "CREATE TABLE IF NOT EXISTS test10kb(pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));"
+	cqlsh -e "CREATE TABLE IF NOT EXISTS test1mb(pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));"
+	cqlsh -e "CREATE TABLE IF NOT EXISTS test10(pkey BIGINT, ccol BIGINT, c1 BIGINT, c2 BIGINT, c3 BIGINT, c4 BIGINT, c5 BIGINT, c6 BIGINT, c7 BIGINT, c8 BIGINT, PRIMARY KEY ((pkey), tstamp));"
+
+trunncate: clean100b clean10kb clean1mb clean10
+
+trunncate100b:
+	- cqlsh -e "TRUNCATE TABLE test.test100b;"
+
+trunncate10kb:
+	- cqlsh -e "TRUNCATE TABLE test.test10kb;"
+
+trunncate1mb:
+	- cqlsh -e "TRUNCATE TABLE test.test1mb;"
+
+trunncate10:
+	- cqlsh -e "TRUNCATE TABLE test.test10;"
+
+
 
 
 ### CLEAN

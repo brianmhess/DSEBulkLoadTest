@@ -1,5 +1,6 @@
 LIST = 0 1 2 3 4 5 6 7 8 9
 
+### TestSSTableWriter
 test100btargets  = $(addprefix test100b_, $(LIST))
 test100b: $(test100btargets)
 
@@ -23,14 +24,97 @@ $(test1mbtargets): test1mb_%:
 	java -cp `./cassandra-classpath` TestSSTableWriter in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test1mb
 
 
-
+### TestSSTableWriter10
 test10targets  = $(addprefix test10_, $(LIST))
 test10: $(test10targets)
 
 $(test10targets): test10_%:
-	java -cp `./cassandra-classpath` TestSSTableWriter in/data10/data10_$*.csv out/data10/$*/test/test10 test10
+	java -cp `./cassandra-classpath` TestSSTableWriter10 in/data10/data10_$*.csv out/data10/$*/test/test10
 
 
 
+### ExecAsync
+exec100btargets  = $(addprefix exec100b_, $(LIST))
+exec100b: $(exec100btargets)
 
+$(exec100btargets): exec100b_%:
+	java -cp `./cassandra-classpath` ExecAsync in/data100B/data100B_$*.csv 10.109.180.2 test100b
+
+
+exec10kbtargets  = $(addprefix exec10kb_, $(LIST))
+exec10kb: $(exec10kbtargets)
+
+$(exec10kbtargets): exec10kb_%:
+	java -cp `./cassandra-classpath` ExecAsync in/data10KB/data10KB_$*.csv 10.109.180.2 test10kb
+
+
+exec1mbtargets  = $(addprefix exec1mb_, $(LIST))
+exec1mb: $(exec1mbtargets)
+
+$(exec1mbtargets): exec1mb_%:
+	java -cp `./cassandra-classpath` ExecAsync in/data1MB/data1MB_$*.csv 10.109.180.2 test1mb
+
+
+### ExecAsync10
+exec10targets  = $(addprefix exec10_, $(LIST))
+exec10: $(exec10targets)
+
+$(exec10targets): exec10_%:
+	java -cp `./cassandra-classpath` ExecAsync in/data10/data10_$*.csv 10.109.180.2
+
+
+
+### sstableloader
+sstable100btargets = $(addprefix sstable100b_, $(LIST))
+sstable100b: $(sstable100btargets)
+
+$(sstable100btargets): sstable100b_%:
+	sstableloader -d 10.109.180.2 out/data100B/%/test/test100b
+
+
+sstable10kbtargets = $(addprefix sstable10kb_, $(LIST))
+sstable10kb: $(sstable10kbtargets)
+
+$(sstable10kbtargets): sstable10kb_%:
+	sstableloader -d 10.109.180.2 out/data10KB/%/test/test10kb
+
+
+sstable1mbtargets = $(addprefix sstable1mb_, $(LIST))
+sstable1mb: $(sstable1mbtargets)
+
+$(sstable1mbtargets): sstable1mb_%:
+	sstableloader -d 10.109.180.2 out/data1MB/%/test/test1mb
+
+
+sstable10targets = $(addprefix sstable10_, $(LIST))
+sstable10: $(sstable10targets)
+
+$(sstable10targets): sstable10_%:
+	sstableloader -d 10.109.180.2 out/data10/%/test/test10
+
+
+### COPY FROM
+copy100btargets = $(addprefix copy100b_, $(LIST))
+copy100b: $(copy100btargets)
+
+$(copy100btargets): copy100b_%:
+	cqlsh -e "COPY test100b(pkey, ccol, data) FROM 'in/data100B/data100B_%.csv'"
+
+copy10kbtargets = $(addprefix copy10kb_, $(LIST))
+copy10kb: $(copy10kbtargets)
+
+$(copy10kbtargets): copy10kb_%:
+	cqlsh -e "COPY test10kb(pkey, ccol, data) FROM 'in/data10KB/data10KB_%.csv'"
+
+copy1mbtargets = $(addprefix copy1mb_, $(LIST))
+copy1mb: $(copy1mbtargets)
+
+$(copy1mbtargets): copy1mb_%:
+	cqlsh -e "COPY test1mb(pkey, ccol, data) FROM 'in/data1MB/data1MB_%.csv'"
+
+copy10targets = $(addprefix copy10_, $(LIST))
+copy10: $(copy10targets)
+
+$(copy10targets): copy10_%:
+	cqlsh -e "COPY test10(pkey, ccol, data) FROM 'in/data10/data10_%.csv'"
 
