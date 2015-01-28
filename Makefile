@@ -71,6 +71,8 @@ $(dirstarget): out/data100B/%/test/test100b:
 	- mkdir -p out/data10/$*/test/test10
 
 indirs: in/data10
+
+in/data10:
 	- mkdir -p in/data100B
 	- mkdir -p in/data10KB
 	- mkdir -p in/data1MB
