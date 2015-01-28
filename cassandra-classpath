@@ -1,0 +1,24 @@
+if [ -z "$DSE_ENV" ]; then
+    for include in "$HOME/.dse-env.sh" \
+                   "`dirname "$0"`/dse-env.sh" \
+                   "/etc/dse/dse-env.sh"; do
+        if [ -r "$include" ]; then
+            DSE_ENV="$include"
+            break
+        fi
+    done
+fi
+
+if [ -z "$DSE_ENV" ]; then
+    echo "DSE_ENV could not be determined."
+    exit 1
+elif [ -r "$DSE_ENV" ]; then
+    . "$DSE_ENV"
+else
+    echo "Location pointed by DSE_ENV not readable: $DSE_ENV"
+    exit 1
+fi
+
+#echo $DSE_COMPONENTS_ROOT
+echo $CASSANDRA_CLASSPATH
+

@@ -1,0 +1,36 @@
+LIST = 0 1 2 3 4 5 6 7 8 9
+
+test100btargets  = $(addprefix test100b_, $(LIST))
+test100b: $(test100btargets)
+
+$(test100btargets): test100b_%:
+	java -cp `./cassandra-classpath` TestSSTableWriter in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test100b
+
+
+
+test10kbtargets  = $(addprefix test10kb_, $(LIST))
+test10kb: $(test10kbtargets)
+
+$(test10kbtargets): test10kb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriter in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test10kb
+
+
+
+test1mbtargets  = $(addprefix test1mb_, $(LIST))
+test1mb: $(test1mbtargets)
+
+$(test1mbtargets): test1mb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriter in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test1mb
+
+
+
+test10targets  = $(addprefix test10_, $(LIST))
+test10: $(test10targets)
+
+$(test10targets): test10_%:
+	java -cp `./cassandra-classpath` TestSSTableWriter in/data10/data10_$*.csv out/data10/$*/test/test10 test10
+
+
+
+
+
