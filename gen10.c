@@ -18,11 +18,18 @@ int main(int argc, char **argv) {
   long long numrecs = strtoll(argv[1], &endptr, 10);
   int seed = atoi(argv[2]);
 
-  srand48(seed);
+  struct drand48_data lcg;
+  srand48_r(seed, &lcg);
+  double rval;
   for (i = 0; i < numrecs; i++) {
-    printf("%lld,%lld,%lld", (long long)(drand48() * keyrange), i, (long long)(drand48() * range[0]));
-    for (j = 1; j < numcols; j++)
-      printf("%c%lld", delim, (long long)(drand48() * range[j]));
+    drand48_r(&lcg, &rval);
+    printf("%lld,%lld", (long long)(rval * keyrange), i);
+    drand48_r(&lcg, &rval);
+    printf(",%lld", (long long)(rval * range[0]));
+    for (j = 1; j < numcols; j++) {
+      drand48_r(&lcg, &rval);
+      printf("%c%lld", delim, (long long)(rval * range[j]));
+    }
     printf("\n");
   }
 

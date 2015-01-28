@@ -35,14 +35,21 @@ int main(int argc, char **argv) {
   char delim = ',';
   long long i;
   int j;
-  srand48(seed);
+  double rval;
+
+  struct drand48_data lcg;
+  srand48_r(seed, &lcg);
 
   for (i = 0; i < numrecs; i++) {
-    for (j = 0; j < 12; j++)
-      printf("%c", map((int)(drand48() * 64)));
+    for (j = 0; j < 12; j++) {
+      drand48_r(&lcg, &rval);
+      printf("%c", map((int)(rval * 64)));
+    }
     printf(",%lld,", i);
-    for (j = 1; j < recsize - 20; j++)
-      printf("%c", map((int)(drand48() * 64)));
+    for (j = 1; j < recsize - 20; j++) {
+      drand48_r(&lcg, &rval);
+      printf("%c", map((int)(rval * 64)));
+    }
     printf("\n");
   }
 
