@@ -2,7 +2,7 @@ all: compile
 
 
 ### COMPILE
-compile: gen gen10 TestSSTableWriter.class TestSSTableWriter10.class ExecAsync.class ExecAsync10.class
+compile: gen gen10 TestSSTableWriter.class TestSSTableWriter10.class ExecAsync.class ExecAsync10.class TestSSTableWriterSplit.class TestSSTableWriterSplit10.class
 
 gen: gen.c
 	gcc -o gen gen.c
@@ -24,6 +24,9 @@ ExecAsync10.class: ExecAsync10.java
 
 TestSSTableWriterSplit.class: TestSSTableWriterSplit.java
 	javac -cp `./cassandra-classpath` TestSSTableWriterSplit.java
+
+TestSSTableWriterSplit10.class: TestSSTableWriterSplit10.java
+	javac -cp `./cassandra-classpath` TestSSTableWriterSplit10.java
 
 
 ### DATA

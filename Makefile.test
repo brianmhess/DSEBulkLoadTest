@@ -118,3 +118,37 @@ copy10: $(copy10targets)
 $(copy10targets): copy10_%:
 	cqlsh -e "COPY test10(pkey, ccol, c1, c2, c3, c4, c5, c6, c7, c8) FROM 'in/data10/data10_$*.csv'"
 
+
+### TestSSTableWriterSplit
+split100btargets  = $(addprefix split100b_, $(LIST))
+split100b: $(split100btargets)
+
+$(split100btargets): split100b_%:
+	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test test100b 10.109.180.2
+
+
+
+split10kbtargets  = $(addprefix split10kb_, $(LIST))
+split10kb: $(split10kbtargets)
+
+$(split10kbtargets): split10kb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test test10kb 10.109.180.2
+
+
+
+split1mbtargets  = $(addprefix split1mb_, $(LIST))
+split1mb: $(split1mbtargets)
+
+$(split1mbtargets): split1mb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test test1mb 10.109.180.2
+
+
+### TestSSTableWriterSplit10
+split10targets  = $(addprefix split10_, $(LIST))
+split10: $(split10targets)
+
+$(split10targets): split10_%:
+	java -cp `./cassandra-classpath` TestSSTableWriterSplit10 in/data10/data10_$*.csv out/data10/$*/test/test10 10.109.180.2
+
+
+
