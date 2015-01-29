@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.UUID;
 import org.apache.cassandra.io.sstable.CQLSSTableWriter;
 import org.apache.cassandra.exceptions.InvalidRequestException;
+import org.apache.cassandra.config.Config;
 
 public class TestSSTableWriter10 {
   static String filename;
@@ -10,8 +11,8 @@ public class TestSSTableWriter10 {
   static String keyspace = "stest";
   static String table = "test10";
   static String delimiter = ",";
-  static String schema = "CREATE TABLE " + keyspace + "." + table + " (partkey BIGINT, ccol BIGINT, c1 BIGINT, c2 BIGINT, c3 BIGINT, c4 BIGINT, c5 BIGINT, c6 BIGINT, c7 BIGINT, c8 BIGINT, PRIMARY KEY ((pkey), ccol));";
-  static String insert = "INSERT INTO " + keyspace + "." + table + " (partkey, ccol, c1, c2, c3, c4, c5, c6, c7, c8) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+  static String schema = "CREATE TABLE " + keyspace + "." + table + " (pkey BIGINT, ccol BIGINT, c1 BIGINT, c2 BIGINT, c3 BIGINT, c4 BIGINT, c5 BIGINT, c6 BIGINT, c7 BIGINT, c8 BIGINT, PRIMARY KEY ((pkey), ccol));";
+  static String insert = "INSERT INTO " + keyspace + "." + table + " (pkey, ccol, c1, c2, c3, c4, c5, c6, c7, c8) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
   public static void main(String[] args) throws IOException {
     if (args.length != 2) {
       System.err.println("Expecting 2 arguments: <filename> <output directory>");
@@ -19,6 +20,7 @@ public class TestSSTableWriter10 {
     }
     filename = args[0];
     outdir = args[1];
+    Config.setClientMode(true);
     BufferedReader reader = new BufferedReader(new FileReader(filename));
     File directory = new File(keyspace);
     if (!directory.exists())

@@ -1,4 +1,5 @@
 *.class
 gen
 gen10
-
+in/
+out/
