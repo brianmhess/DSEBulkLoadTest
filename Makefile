@@ -92,19 +92,19 @@ ddl:
 	cqlsh -e "CREATE TABLE IF NOT EXISTS test.test1mb(pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));"
 	cqlsh -e "CREATE TABLE IF NOT EXISTS test.test10(pkey BIGINT, ccol BIGINT, c1 BIGINT, c2 BIGINT, c3 BIGINT, c4 BIGINT, c5 BIGINT, c6 BIGINT, c7 BIGINT, c8 BIGINT, PRIMARY KEY ((pkey), ccol));"
 
-trunncate: clean100b clean10kb clean1mb clean10
+truncate: truncate100b truncate10kb truncate1mb truncate10
 
-trunncate100b:
-	- cqlsh -e "TRUNCATE TABLE test.test100b;"
+truncate100b:
+	- cqlsh -e "TRUNCATE test.test100b;"
 
-trunncate10kb:
-	- cqlsh -e "TRUNCATE TABLE test.test10kb;"
+truncate10kb:
+	- cqlsh -e "TRUNCATE test.test10kb;"
 
-trunncate1mb:
-	- cqlsh -e "TRUNCATE TABLE test.test1mb;"
+truncate1mb:
+	- cqlsh -e "TRUNCATE test.test1mb;"
 
-trunncate10:
-	- cqlsh -e "TRUNCATE TABLE test.test10;"
+truncate10:
+	- cqlsh -e "TRUNCATE test.test10;"
 
 
 
