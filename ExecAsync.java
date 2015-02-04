@@ -9,7 +9,7 @@ public class ExecAsync {
   static String keyspace = "test";
   static String table = "testb";
   static String delimiter = ",";
-  static String insert = "INSERT INTO " + keyspace + "." + table + " (pkey, ccol, data) VALUES (?, ?, ?);";
+  static String insert = "";
 
   public static void main(String[] args) throws IOException {
     if (args.length != 3) {
@@ -19,6 +19,7 @@ public class ExecAsync {
     filename = args[0];
     host = args[1];
     table = args[2];
+    insert = "INSERT INTO " + keyspace + "." + table + " (pkey, ccol, data) VALUES (?, ?, ?);";
 
     BufferedReader reader = new BufferedReader(new FileReader(filename));
     File directory = new File(keyspace);

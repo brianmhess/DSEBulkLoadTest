@@ -57,6 +57,8 @@ public class ExecAsync10 {
     }
     futures.clear();
 
+    System.err.println("*** DONE: " + filename);
+
     cluster.close();
   }
 

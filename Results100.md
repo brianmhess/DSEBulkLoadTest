@@ -1,25 +1,26 @@
 Experiment | Number of Jobs | Running Time (s) 
 :----------|---------------:|----------------:
-test100b   |  10            |  145          
-test10kb   |  10            |  81
-test1mb    |  10            |  79
-test10     |  10            |  457
+test100b   |  10            |  1642
+test10kb   |  10            |  812
+test1mb    |  10            |  805
+test10     |  10            |  7264
 
 
 Experiment | Number of Jobs | Running Time (s)
 :----------|---------------:|----------------:
-sstable100b   |  10            |  101
-sstable10kb   |  10            |  49
-sstable1mb    |  10            |  47
-sstable10     |  10            |  138
+sstable100b   |  5             |  1627
+sstable100b   |  8             |  922
+sstable10kb   |  10            |  429
+sstable1mb    |  10            |  450
+sstable10     |  10            |  1340
 
 
 Experiment | Number of Jobs | Running Time (s)
 :----------|---------------:|----------------:
-exec100b   |  10            |  550
-exec10kb   |  10            |  43
-exec1mb    |  10            |  21
-exec10     |  10            |  1674
+exec100b   |  10            |  5514
+exec10kb   |  10            |  720
+exec1mb    |  10            |  711
+exec10     |  10            |  
 
 
 Experiment | Number of Jobs | Running Time (s)
