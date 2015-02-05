@@ -66,9 +66,10 @@ public class TestSSTableWriterSplit {
     ip = args[4];
     Config.setClientMode(true);
     BufferedReader reader = new BufferedReader(new FileReader(filename));
-    File directory = new File(keyspace);
+    File directory = new File(outdir);
     if (!directory.exists())
-      directory.mkdir();
+      directory.mkdirs();
+
     CsvParser parser = new CsvParser();
     schema = "CREATE TABLE IF NOT EXISTS " + keyspace + "." + table + " (pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));";
     insert = "INSERT INTO " + keyspace + "." + table + " (pkey, ccol, data) VALUES (?, ?, ?);";
@@ -82,8 +83,8 @@ public class TestSSTableWriterSplit {
 
     while ((line = reader.readLine()) != null) {
       if (parser.parse(line, delimiter, lineNumber)) {
-        if (0 == lineNumber % 10000)
-          System.err.println("Got to line " + lineNumber);
+//        if (0 == lineNumber % 10000)
+//          System.err.println("Got to line " + lineNumber);
         if (contains(parser.pkey))
           parser.addRow(writer);
       }
