@@ -20,7 +20,7 @@ Experiment | Number of Jobs | Running Time (s)
 exec100b   |  10            |  5514
 exec10kb   |  10            |  720
 exec1mb    |  10            |  711
-exec10     |  10            |  
+exec10     |  10            |  16005
 
 
 Experiment | Number of Jobs | Running Time (s)
