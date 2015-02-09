@@ -15,46 +15,36 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Host;
 
-public class TestSSTableWriterSplit {
+public class TestSSTableWriterSplitAll {
   static String filename;
-  String outdir;
-  String ip = "127.0.0.1";
-  String keyspace = "";
-  String table = "";
-  String delimiter = ",";
-  String schema = "";
-  String insert = "";
-  String dummyString = "";
-  long dummyLong = 0;
+  static String outdir;
+  static String ip = "127.0.0.1";
+  static String keyspace = "";
+  static String table = "";
+  static String delimiter = ",";
+  static String schema = "";
+  static String insert = "";
+  static String dummyString = "";
+  static long dummyLong = 0;
 
-  Cluster cluster;
-  Session session;
-  Metadata metadata;
-  PreparedStatement stmt;
+  static Cluster cluster;
+  static Session session;
+  static Metadata metadata;
+  static PreparedStatement stmt;
 
-  private void init() {
+  private static void init() {
     cluster = Cluster.builder().addContactPoint(ip).build();
     metadata = cluster.getMetadata();
     session = cluster.newSession();
     stmt = session.prepare(insert);
   }
 
-  private void cleanup() {
+  private static void cleanup() {
     session.close();
     cluster.close();
   }
 
-  private boolean contains(String pkey) {
-    BoundStatement bind = stmt.bind(pkey, dummyLong, dummyString);
-    ByteBuffer bb = bind.getBytesUnsafe(0);
-    Set<Host> endpts = metadata.getReplicas(keyspace, bb);
-    for (Host h : endpts)
-      if (ip.equalsIgnoreCase(h.getAddress().getHostAddress()))
-        return true;
-    return false;
-  }
-
-  public void run(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
     if (args.length != 5) {
       System.err.println("Expecting 5 arguments: <filename> <output directory> <keyspace> <tablename> <IP address>");
       System.exit(1);
@@ -64,36 +54,55 @@ public class TestSSTableWriterSplit {
     keyspace = args[2];
     table = args[3];
     ip = args[4];
-    Config.setClientMode(true);
-    BufferedReader reader = new BufferedReader(new FileReader(filename));
-    File directory = new File(outdir);
-    if (!directory.exists())
-      directory.mkdirs();
-
     CsvParser parser = new CsvParser();
     schema = "CREATE TABLE IF NOT EXISTS " + keyspace + "." + table + " (pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));";
     insert = "INSERT INTO " + keyspace + "." + table + " (pkey, ccol, data) VALUES (?, ?, ?);";
-    CQLSSTableWriter writer = CQLSSTableWriter.builder().inDirectory(outdir).forTable(schema).using(insert).build();
+
+    System.err.println("*******A");
+    init();
+    System.err.println("*******b");
+
+    Config.setClientMode(true);
+    BufferedReader reader = new BufferedReader(new FileReader(filename));
+    Map<String,CQLSSTableWriter> map = new HashMap<String,CQLSSTableWriter>();
+    System.err.println("*******C");
+    System.err.println("Hosts: " + metadata.getAllHosts());
+    for (Host h : metadata.getAllHosts()) {
+      String sip = h.getAddress().getHostAddress();
+      String sipdir = outdir + "/" + sip;
+      System.err.println("sipdir = " + sipdir);
+      File directory = new File(sipdir);
+      if (!directory.exists())
+        directory.mkdirs();
+
+      CQLSSTableWriter writer = CQLSSTableWriter.builder().inDirectory(sipdir).forTable(schema).using(insert).build();
+      map.put(sip, writer);
+    }
+    System.err.println("*******D");
+
 
     String line;
     int lineNumber = 1;
     long timestamp = System.currentTimeMillis() * 1000;
 
-    init();
-
     while ((line = reader.readLine()) != null) {
       if (parser.parse(line, delimiter, lineNumber)) {
 //        if (0 == lineNumber % 10000)
 //          System.err.println("Got to line " + lineNumber);
-        if (contains(parser.pkey))
-          parser.addRow(writer);
+        BoundStatement bind = stmt.bind(parser.pkey, dummyLong, dummyString);
+        ByteBuffer bb = bind.getBytesUnsafe(0);
+        Set<Host> endpts = metadata.getReplicas(keyspace, bb);
+        for (Host h : endpts) {
+          parser.addRow(map.get(h.getAddress().getHostAddress()));
+        }
       }
       lineNumber++;
     }
 
     cleanup();
 
-    writer.close();
+    for (CQLSSTableWriter w : map.values())
+      w.close();
     System.exit(0);
   }
 
@@ -129,10 +138,11 @@ public class TestSSTableWriterSplit {
     }
   }
 
-  public static void main(String [] args) throws IOException {
-    TestSSTableWriterSplit n = new TestSSTableWriterSplit();
-    n.run(args);
-  }
+//  public static void main(String [] args) throws IOException {
+//    System.err.println("++++++");
+//    TestSSTableWriterSplit n = new TestSSTableWriterSplit();
+//    n.run(args);
+//  }
 }
 
 
