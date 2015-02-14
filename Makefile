@@ -83,7 +83,7 @@ dirs: $(dirstarget) indirs
 
 $(dirstarget): out/data10/%/test/test10:
 	- mkdir -p out/data100B/$*/test/test100b
-	- mkdir -p out/data10KB/$*/test/test1kb
+	- mkdir -p out/data1KB/$*/test/test1kb
 	- mkdir -p out/data10KB/$*/test/test10kb
 	- mkdir -p out/data1MB/$*/test/test1mb
 	- mkdir -p out/data10/$*/test/test10
@@ -107,7 +107,7 @@ ddl:
 	cqlsh -e "CREATE TABLE IF NOT EXISTS test.test1mb(pkey TEXT, ccol BIGINT, data TEXT, PRIMARY KEY ((pkey), ccol));"
 	cqlsh -e "CREATE TABLE IF NOT EXISTS test.test10(pkey BIGINT, ccol BIGINT, c1 BIGINT, c2 BIGINT, c3 BIGINT, c4 BIGINT, c5 BIGINT, c6 BIGINT, c7 BIGINT, c8 BIGINT, PRIMARY KEY ((pkey), ccol));"
 
-truncate: truncate100b truncate10kb truncate1mb truncate10
+truncate: truncate100b truncate1kb truncate10kb truncate1mb truncate10
 
 truncate100b:
 	- cqlsh -e "TRUNCATE test.test100b;"
