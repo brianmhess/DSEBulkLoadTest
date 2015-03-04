@@ -227,3 +227,50 @@ $(cpp10targets): cpp10_%:
 	./cppexec10 in/data10/data10_$*.csv 10.109.180.2
 
 
+
+##CPPAll
+cppall3: cppall3_1 cppall3_2 cppall3_3
+
+cppall3_1:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_0*.csv in/data10KB/data10KB_1*.csv in/data10KB/data10KB_2*.csv in/data10KB/data10KB_3*.csv
+
+cppall3_2:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_4*.csv in/data10KB/data10KB_5*.csv in/data10KB/data10KB_6*.csv
+
+cppall3_3:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_7*.csv in/data10KB/data10KB_8*.csv in/data10KB/data10KB_9*.csv
+
+
+cppall4: cppall4_1 cppall4_2 cppall4_3 cppall4_4
+
+cppall4_1:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[01234].csv in/data10KB/data10KB_[12][0123456789].csv 
+
+cppall4_2:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[56789].csv in/data10KB/data10KB_[34][0123456789].csv
+
+cppall4_3:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_9[01234].csv in/data10KB/data10KB_[56][0123456789].csv
+
+cppall4_4:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_9[56789].csv in/data10KB/data10KB_[78][0123456789].csv 
+
+
+cppall5: cppall5_1 cppall5_2 cppall5_3 cppall5_4 cppall5_5
+
+cppall5_1:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[0123456789].csv in/data10KB/data10KB_[1][0123456789].csv 
+
+cppall5_2:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[23][0123456789].csv
+
+cppall5_3:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[45][0123456789].csv
+
+cppall5_4:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[67][0123456789].csv 
+
+cppall5_5:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[89][0123456789].csv 
+
+
