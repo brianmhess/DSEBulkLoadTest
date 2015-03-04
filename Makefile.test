@@ -11,6 +11,14 @@ $(test100btargets): test100b_%:
 
 
 
+test1kbtargets  = $(addprefix test1kb_, $(LIST))
+test1kb: $(test1kbtargets)
+
+$(test1kbtargets): test1kb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriter in/data1KB/data1KB_$*.csv out/data1KB/$*/test/test1kb test1kb
+
+
+
 test10kbtargets  = $(addprefix test10kb_, $(LIST))
 test10kb: $(test10kbtargets)
 
@@ -41,6 +49,13 @@ exec100b: $(exec100btargets)
 
 $(exec100btargets): exec100b_%:
 	java -cp $(CLASSPATH) ExecAsync in/data100B/data100B_$*.csv 10.109.180.2 test100b
+
+
+exec1kbtargets  = $(addprefix exec1kb_, $(LIST))
+exec1kb: $(exec1kbtargets)
+
+$(exec1kbtargets): exec1kb_%:
+	java -cp `./cassandra-classpath` ExecAsync in/data1KB/data1KB_$*.csv 10.109.180.2 test1kb
 
 
 exec10kbtargets  = $(addprefix exec10kb_, $(LIST))
@@ -74,6 +89,13 @@ $(sstable100btargets): sstable100b_%:
 	sstableloader -d 10.109.180.2 out/data100B/$*/test/test100b
 
 
+sstable1kbtargets = $(addprefix sstable1kb_, $(LIST))
+sstable1kb: $(sstable1kbtargets)
+
+$(sstable1kbtargets): sstable1kb_%:
+	sstableloader -d 10.109.180.2 out/data1KB/$*/test/test1kb
+
+
 sstable10kbtargets = $(addprefix sstable10kb_, $(LIST))
 sstable10kb: $(sstable10kbtargets)
 
@@ -102,6 +124,12 @@ copy100b: $(copy100btargets)
 $(copy100btargets): copy100b_%:
 	cqlsh -e "COPY test100b(pkey, ccol, data) FROM 'in/data100B/data100B_$*.csv'"
 
+copy1kbtargets = $(addprefix copy1kb_, $(LIST))
+copy1kb: $(copy1kbtargets)
+
+$(copy1kbtargets): copy1kb_%:
+	cqlsh -e "COPY test1kb(pkey, ccol, data) FROM 'in/data1KB/data1KB_$*.csv'"
+
 copy10kbtargets = $(addprefix copy10kb_, $(LIST))
 copy10kb: $(copy10kbtargets)
 
@@ -127,6 +155,14 @@ split100b: $(split100btargets)
 
 $(split100btargets): split100b_%:
 	java -cp $(CLASSPATH) TestSSTableWriterSplit in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test test100b 10.109.180.2
+
+
+
+split1kbtargets  = $(addprefix split1kb_, $(LIST))
+split1kb: $(split1kbtargets)
+
+$(split1kbtargets): split1kb_%:
+	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data1KB/data1KB_$*.csv out/data1KB/$*/test/test1kb test test1kb 10.109.180.2
 
 
 

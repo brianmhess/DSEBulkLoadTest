@@ -36,6 +36,10 @@ cppexec: cppexec.c
 cppexecall: cppexecall.c
 	g++ -o cppexecall cppexecall.c -L/usr/lib/x86_64-linux-gnu/ `pkg-config --libs cassandra` -lpthread
 
+TestSSTableWriterSplitAll.class: TestSSTableWriterSplitAll.java
+	javac -cp `./cassandra-classpath` TestSSTableWriterSplitAll.java
+
+
 
 ### DATA
 data: dirs data100B data1KB data10KB data1MB data10
@@ -52,7 +56,7 @@ $(data100Btargets): data100B.%:
 data1KBtargets = $(addprefix data1KB., $(LIST))
 data1KB: $(data1KBtargets)
 
-$(data1KBtargets): data1KB.%:
+$(data1KBtargets): data1KB.%: 
 	./gen 1024000 1024 $* > in/data1KB/data1KB_$*.csv
 
 
@@ -98,6 +102,7 @@ in/data10:
 	- mkdir -p in/data100B
 	- mkdir -p in/data1KB
 	- mkdir -p in/data10KB
+	- mkdir -p in/data1KB
 	- mkdir -p in/data1MB
 	- mkdir -p in/data10
 
