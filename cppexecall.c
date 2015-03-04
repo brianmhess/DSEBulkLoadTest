@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <time.h>
 
 #include "cassandra.h"
 
-#define NUM_CONCURRENT_REQUESTS 5000
+#define NUM_CONCURRENT_REQUESTS 10000
 
 void print_error(CassFuture* future) {
   CassString message = cass_future_error_message(future);
@@ -97,6 +98,7 @@ void* process_files(void* args) {
   CassSession *session = ((pfile*)args)->session;
   int myid = ((pfile*)args)->myid;
   int num_threads = ((pfile*)args)->num_threads;
+  time_t t;
 
   char *buf = NULL;
   buf = (char*)malloc(1048576000+100);
@@ -115,7 +117,9 @@ void* process_files(void* args) {
       fprintf(stderr, "Thread %d: Could not open input file (%s).... skipping\n", myid, fnames[fidx]);
       continue;
     }
-    fprintf(stderr, "\nThread %d: Processing file %s\n\n", myid, fnames[fidx]);
+    fprintf(stderr, "\nThread %d: Processing file %s\n", myid, fnames[fidx]);
+    time(&t);
+    fprintf(stderr, "    %s\n\n", ctime(&t));
 
     lineNumber = 0;
     while (1 == fscanf(fp, "%[^\n]\n", buf)) {
@@ -172,14 +176,14 @@ int main(int argc, char** argv) {
     fnames[i] = argv[i+4];
 
   CassCluster *cluster = create_cluster(ip);
-  cass_cluster_set_num_threads_io(cluster, 16);
+  cass_cluster_set_num_threads_io(cluster, 4);
   cass_cluster_set_queue_size_io(cluster, 10000);
   cass_cluster_set_pending_requests_low_water_mark(cluster, 5000);
   cass_cluster_set_pending_requests_high_water_mark(cluster, 10000);
-  cass_cluster_set_core_connections_per_host(cluster, 2);
-  cass_cluster_set_max_connections_per_host(cluster, 2);
-  cass_cluster_set_write_bytes_high_water_mark(cluster, 1024 * 1024);
-  cass_cluster_set_write_bytes_low_water_mark(cluster, 512 * 1024);
+  cass_cluster_set_core_connections_per_host(cluster, 8);
+  cass_cluster_set_max_connections_per_host(cluster, 8);
+  cass_cluster_set_write_bytes_high_water_mark(cluster, 128 * 1024);
+  cass_cluster_set_write_bytes_low_water_mark(cluster, 64 * 1024);
   cass_cluster_set_queue_size_io(cluster, NUM_CONCURRENT_REQUESTS * (num_threads + 1));
 
   CassSession *session = cass_session_new();
