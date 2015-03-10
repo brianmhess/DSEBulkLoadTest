@@ -1,11 +1,13 @@
 LIST = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
 
+include Makefile
+
 ### TestSSTableWriter
 test100btargets  = $(addprefix test100b_, $(LIST))
 test100b: $(test100btargets)
 
 $(test100btargets): test100b_%:
-	java -cp `./cassandra-classpath` TestSSTableWriter in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test100b
+	java -cp $(CLASSPATH) TestSSTableWriter in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test100b
 
 
 
@@ -21,7 +23,7 @@ test10kbtargets  = $(addprefix test10kb_, $(LIST))
 test10kb: $(test10kbtargets)
 
 $(test10kbtargets): test10kb_%:
-	java -cp `./cassandra-classpath` TestSSTableWriter in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test10kb
+	java -cp $(CLASSPATH) TestSSTableWriter in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test10kb
 
 
 
@@ -29,7 +31,7 @@ test1mbtargets  = $(addprefix test1mb_, $(LIST))
 test1mb: $(test1mbtargets)
 
 $(test1mbtargets): test1mb_%:
-	java -cp `./cassandra-classpath` TestSSTableWriter in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test1mb
+	java -cp $(CLASSPATH) TestSSTableWriter in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test1mb
 
 
 ### TestSSTableWriter10
@@ -37,7 +39,7 @@ test10targets  = $(addprefix test10_, $(LIST))
 test10: $(test10targets)
 
 $(test10targets): test10_%:
-	java -cp `./cassandra-classpath` TestSSTableWriter10 in/data10/data10_$*.csv out/data10/$*/test/test10
+	java -cp $(CLASSPATH) TestSSTableWriter10 in/data10/data10_$*.csv out/data10/$*/test/test10
 
 
 
@@ -46,7 +48,7 @@ exec100btargets  = $(addprefix exec100b_, $(LIST))
 exec100b: $(exec100btargets)
 
 $(exec100btargets): exec100b_%:
-	java -cp `./cassandra-classpath` ExecAsync in/data100B/data100B_$*.csv 10.109.180.2 test100b
+	java -cp $(CLASSPATH) ExecAsync in/data100B/data100B_$*.csv 10.109.180.2 test100b
 
 
 exec1kbtargets  = $(addprefix exec1kb_, $(LIST))
@@ -60,14 +62,14 @@ exec10kbtargets  = $(addprefix exec10kb_, $(LIST))
 exec10kb: $(exec10kbtargets)
 
 $(exec10kbtargets): exec10kb_%:
-	java -cp `./cassandra-classpath` ExecAsync in/data10KB/data10KB_$*.csv 10.109.180.2 test10kb
+	java -cp $(CLASSPATH) ExecAsync in/data10KB/data10KB_$*.csv 10.109.180.2 test10kb
 
 
 exec1mbtargets  = $(addprefix exec1mb_, $(LIST))
 exec1mb: $(exec1mbtargets)
 
 $(exec1mbtargets): exec1mb_%:
-	java -cp `./cassandra-classpath` ExecAsync in/data1MB/data1MB_$*.csv 10.109.180.2 test1mb
+	java -cp $(CLASSPATH) ExecAsync in/data1MB/data1MB_$*.csv 10.109.180.2 test1mb
 
 
 ### ExecAsync10
@@ -75,7 +77,7 @@ exec10targets  = $(addprefix exec10_, $(LIST))
 exec10: $(exec10targets)
 
 $(exec10targets): exec10_%:
-	java -cp `./cassandra-classpath` ExecAsync10 in/data10/data10_$*.csv 10.109.180.2
+	java -cp $(CLASSPATH) ExecAsync10 in/data10/data10_$*.csv 10.109.180.2
 
 
 
@@ -152,7 +154,7 @@ split100btargets  = $(addprefix split100b_, $(LIST))
 split100b: $(split100btargets)
 
 $(split100btargets): split100b_%:
-	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test test100b 10.109.180.2
+	java -cp $(CLASSPATH) TestSSTableWriterSplit in/data100B/data100B_$*.csv out/data100B/$*/test/test100b test test100b 10.109.180.2
 
 
 
@@ -168,7 +170,7 @@ split10kbtargets  = $(addprefix split10kb_, $(LIST))
 split10kb: $(split10kbtargets)
 
 $(split10kbtargets): split10kb_%:
-	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test test10kb 10.109.180.2
+	java -cp $(CLASSPATH) TestSSTableWriterSplit in/data10KB/data10KB_$*.csv out/data10KB/$*/test/test10kb test test10kb 10.109.180.2
 
 
 
@@ -176,7 +178,7 @@ split1mbtargets  = $(addprefix split1mb_, $(LIST))
 split1mb: $(split1mbtargets)
 
 $(split1mbtargets): split1mb_%:
-	java -cp `./cassandra-classpath` TestSSTableWriterSplit in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test test1mb 10.109.180.2
+	java -cp $(CLASSPATH) TestSSTableWriterSplit in/data1MB/data1MB_$*.csv out/data1MB/$*/test/test1mb test test1mb 10.109.180.2
 
 
 ### TestSSTableWriterSplit10
@@ -184,7 +186,91 @@ split10targets  = $(addprefix split10_, $(LIST))
 split10: $(split10targets)
 
 $(split10targets): split10_%:
-	java -cp `./cassandra-classpath` TestSSTableWriterSplit10 in/data10/data10_$*.csv out/data10/$*/test/test10 10.109.180.2
+	java -cp $(CLASSPATH) TestSSTableWriterSplit10 in/data10/data10_$*.csv out/data10/$*/test/test10 10.109.180.2
 
+
+
+### CPPExec
+cpp100btargets  = $(addprefix cpp100b_, $(LIST))
+cpp100b: $(cpp100btargets)
+
+$(cpp100btargets): cpp100b_%:
+	./cppexec in/data100B/data100B_$*.csv 10.109.180.2 test100b
+
+
+cpp1kbtargets  = $(addprefix cpp1kb_, $(LIST))
+cpp1kb: $(cpp1kbtargets)
+
+$(cpp1kbtargets): cpp1kb_%:
+	./cppexec in/data1KB/data1KB_$*.csv 10.109.180.2 test1kb
+
+
+cpp10kbtargets  = $(addprefix cpp10kb_, $(LIST))
+cpp10kb: $(cpp10kbtargets)
+
+$(cpp10kbtargets): cpp10kb_%:
+	./cppexec in/data10KB/data10KB_$*.csv 10.109.180.2 test10kb
+
+
+cpp1mbtargets  = $(addprefix cpp1mb_, $(LIST))
+cpp1mb: $(cpp1mbtargets)
+
+$(cpp1mbtargets): cpp1mb_%:
+	./cppexec in/data1MB/data1MB_$*.csv 10.109.180.2 test1mb
+
+
+### CPPExec10
+cpp10targets  = $(addprefix cpp10_, $(LIST))
+cpp10: $(cpp10targets)
+
+$(cpp10targets): cpp10_%:
+	./cppexec10 in/data10/data10_$*.csv 10.109.180.2
+
+
+
+##CPPAll
+cppall3: cppall3_1 cppall3_2 cppall3_3
+
+cppall3_1:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_0*.csv in/data10KB/data10KB_1*.csv in/data10KB/data10KB_2*.csv in/data10KB/data10KB_3*.csv
+
+cppall3_2:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_4*.csv in/data10KB/data10KB_5*.csv in/data10KB/data10KB_6*.csv
+
+cppall3_3:
+	./cppexecall 3 10.109.180.2 test10kb in/data10KB/data10KB_7*.csv in/data10KB/data10KB_8*.csv in/data10KB/data10KB_9*.csv
+
+
+cppall4: cppall4_1 cppall4_2 cppall4_3 cppall4_4
+
+cppall4_1:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[01234].csv in/data10KB/data10KB_[12][0123456789].csv 
+
+cppall4_2:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[56789].csv in/data10KB/data10KB_[34][0123456789].csv
+
+cppall4_3:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_9[01234].csv in/data10KB/data10KB_[56][0123456789].csv
+
+cppall4_4:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_9[56789].csv in/data10KB/data10KB_[78][0123456789].csv 
+
+
+cppall5: cppall5_1 cppall5_2 cppall5_3 cppall5_4 cppall5_5
+
+cppall5_1:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[0123456789].csv in/data10KB/data10KB_[1][0123456789].csv 
+
+cppall5_2:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[23][0123456789].csv
+
+cppall5_3:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[45][0123456789].csv
+
+cppall5_4:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[67][0123456789].csv 
+
+cppall5_5:
+	./cppexecall 2 10.109.180.2 test10kb in/data10KB/data10KB_[89][0123456789].csv 
 
 

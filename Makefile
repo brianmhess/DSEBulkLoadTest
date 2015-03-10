@@ -2,7 +2,9 @@ all: compile
 
 
 ### COMPILE
-compile: gen gen10 TestSSTableWriter.class TestSSTableWriter10.class ExecAsync.class ExecAsync10.class TestSSTableWriterSplit.class TestSSTableWriterSplit10.class
+CLASSPATH := $(shell ./cassandra-classpath)
+
+compile: gen gen10 TestSSTableWriter.class TestSSTableWriter10.class ExecAsync.class ExecAsync10.class TestSSTableWriterSplit.class TestSSTableWriterSplit10.class cppexec cppexecall
 
 gen: gen.c
 	gcc -o gen gen.c
@@ -11,22 +13,28 @@ gen10: gen10.c
 	gcc -o gen10 gen10.c
 
 TestSSTableWriter.class: TestSSTableWriter.java
-	javac -cp `./cassandra-classpath` TestSSTableWriter.java
+	javac -cp $(CLASSPATH) TestSSTableWriter.java
 
 TestSSTableWriter10.class: TestSSTableWriter10.java
-	javac -cp `./cassandra-classpath` TestSSTableWriter10.java
+	javac -cp $(CLASSPATH) TestSSTableWriter10.java
 
 ExecAsync.class: ExecAsync.java
-	javac -cp `./cassandra-classpath` ExecAsync.java
+	javac -cp $(CLASSPATH) ExecAsync.java
 
 ExecAsync10.class: ExecAsync10.java
-	javac -cp `./cassandra-classpath` ExecAsync10.java
+	javac -cp $(CLASSPATH) ExecAsync10.java
 
 TestSSTableWriterSplit.class: TestSSTableWriterSplit.java
-	javac -cp `./cassandra-classpath` TestSSTableWriterSplit.java
+	javac -cp $(CLASSPATH) TestSSTableWriterSplit.java
 
 TestSSTableWriterSplit10.class: TestSSTableWriterSplit10.java
-	javac -cp `./cassandra-classpath` TestSSTableWriterSplit10.java
+	javac -cp $(CLASSPATH) TestSSTableWriterSplit10.java
+
+cppexec: cppexec.c
+	g++ -o cppexec cppexec.c -L/usr/lib/x86_64-linux-gnu/ `pkg-config --libs cassandra`
+
+cppexecall: cppexecall.c
+	g++ -o cppexecall cppexecall.c -L/usr/lib/x86_64-linux-gnu/ `pkg-config --libs cassandra` -lpthread
 
 TestSSTableWriterSplitAll.class: TestSSTableWriterSplitAll.java
 	javac -cp `./cassandra-classpath` TestSSTableWriterSplitAll.java
@@ -92,6 +100,7 @@ indirs: in/data10
 
 in/data10:
 	- mkdir -p in/data100B
+	- mkdir -p in/data1KB
 	- mkdir -p in/data10KB
 	- mkdir -p in/data1KB
 	- mkdir -p in/data1MB
@@ -129,7 +138,7 @@ truncate10:
 
 ### CLEAN
 clean:
-	- rm gen gen10
+	- rm gen gen10 cppexec cppexecall
 	- rm *.class
 
 cleanall: clean
