@@ -120,31 +120,31 @@ copy100btargets = $(addprefix copy100b_, $(LIST))
 copy100b: $(copy100btargets)
 
 $(copy100btargets): copy100b_%:
-	cqlsh -e "COPY test100b(pkey, ccol, data) FROM 'in/data100B/data100B_$*.csv'"
+	cqlsh -e "COPY test.test100b(pkey, ccol, data) FROM 'in/data100B/data100B_$*.csv'"
 
 copy1kbtargets = $(addprefix copy1kb_, $(LIST))
 copy1kb: $(copy1kbtargets)
 
 $(copy1kbtargets): copy1kb_%:
-	cqlsh -e "COPY test1kb(pkey, ccol, data) FROM 'in/data1KB/data1KB_$*.csv'"
+	cqlsh -e "COPY test.test1kb(pkey, ccol, data) FROM 'in/data1KB/data1KB_$*.csv'"
 
 copy10kbtargets = $(addprefix copy10kb_, $(LIST))
 copy10kb: $(copy10kbtargets)
 
 $(copy10kbtargets): copy10kb_%:
-	cqlsh -e "COPY test10kb(pkey, ccol, data) FROM 'in/data10KB/data10KB_$*.csv'"
+	cqlsh -e "COPY test.test10kb(pkey, ccol, data) FROM 'in/data10KB/data10KB_$*.csv'"
 
 copy1mbtargets = $(addprefix copy1mb_, $(LIST))
 copy1mb: $(copy1mbtargets)
 
 $(copy1mbtargets): copy1mb_%:
-	cqlsh -e "COPY test1mb(pkey, ccol, data) FROM 'in/data1MB/data1MB_$*.csv'"
+	cqlsh -e "COPY test.test1mb(pkey, ccol, data) FROM 'in/data1MB/data1MB_$*.csv'"
 
 copy10targets = $(addprefix copy10_, $(LIST))
 copy10: $(copy10targets)
 
 $(copy10targets): copy10_%:
-	cqlsh -e "COPY test10(pkey, ccol, c1, c2, c3, c4, c5, c6, c7, c8) FROM 'in/data10/data10_$*.csv'"
+	cqlsh -e "COPY test.test10(pkey, ccol, c1, c2, c3, c4, c5, c6, c7, c8) FROM 'in/data10/data10_$*.csv'"
 
 
 ### TestSSTableWriterSplit
