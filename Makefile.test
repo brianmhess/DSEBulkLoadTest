@@ -128,7 +128,7 @@ copy1kbtargets = $(addprefix copy1kb_, $(LIST))
 copy1kb: $(copy1kbtargets)
 
 $(copy1kbtargets): copy1kb_%:
-	cqlsh -e "COPY test.test1kb(pkey, ccol, data) FROM 'in/data1KB/data1KB_$*.csv'"
+	cqlsh 10.20.0.5 -e "COPY test.test1kb(pkey, ccol, data) FROM 'in/data1KB/data1KB_$*.csv'"
 
 copy10kbtargets = $(addprefix copy10kb_, $(LIST))
 copy10kb: $(copy10kbtargets)
