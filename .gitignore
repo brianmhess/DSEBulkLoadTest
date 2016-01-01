@@ -4,4 +4,8 @@ gen10
 in/
 out/
 *~
+out
+in
+cppexec
+cppexecall
 

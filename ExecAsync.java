@@ -27,10 +27,11 @@ public class ExecAsync {
       directory.mkdir();
 
     Cluster cluster = Cluster.builder()
-                             .addContactPoint(host)
-                             .withPort(9042)
-                             .withLoadBalancingPolicy(new TokenAwarePolicy( new DCAwareRoundRobinPolicy()))
-                             .build();
+	.addContactPoint(host)
+	.withPort(9042)
+	.withProtocolVersion(ProtocolVersion.V2)
+	.withLoadBalancingPolicy(new TokenAwarePolicy( new DCAwareRoundRobinPolicy(), true))
+	.build();
     Session session = cluster.newSession();
 
     PreparedStatement statement = session.prepare(insert);
@@ -40,24 +41,24 @@ public class ExecAsync {
     String line;
     int lineNumber = 1;
     while ((line = reader.readLine()) != null) {
-      if (999 == lineNumber % 1000) {
+	/*if (19999 == lineNumber % 20000) {
         for (ResultSetFuture future: futures) {
           future.getUninterruptibly();
         }
         futures.clear();
-      }
+	}*/
       if (parser.parse(line, delimiter, lineNumber)) {
         BoundStatement bind = statement.bind(parser.pkey, parser.ccol, parser.data);
         ResultSetFuture resultSetFuture = session.executeAsync(bind);
-        futures.add(resultSetFuture);
+        //futures.add(resultSetFuture);
       }
       lineNumber++;
     }
 
-    for (ResultSetFuture future: futures) {
+    /*for (ResultSetFuture future: futures) {
       future.getUninterruptibly();
     }
-    futures.clear();
+    futures.clear();*/
 
     System.err.println("*** DONE: " + filename);
 

@@ -10,8 +10,10 @@
 #define NUM_CONCURRENT_REQUESTS 10000
 
 void print_error(CassFuture* future) {
-  CassString message = cass_future_error_message(future);
-  fprintf(stderr, "Error: %.*s\n", (int)message.length, message.data);
+  const char* message;
+  size_t msize;
+  cass_future_error_message(future, &message, &msize);
+  fprintf(stderr, "Error: %s\n", message);
 }
 
 
@@ -38,7 +40,7 @@ CassError connect_session(CassSession* session, const CassCluster* cluster) {
 CassError execute_query(CassSession* session, const char* query) {
   CassError rc = CASS_OK;
   CassFuture* future = NULL;
-  CassStatement* statement = cass_statement_new(cass_string_init(query), 0);
+  CassStatement* statement = cass_statement_new(query, 0);
 
   future = cass_session_execute(session, statement);
   cass_future_wait(future);
@@ -54,7 +56,7 @@ CassError execute_query(CassSession* session, const char* query) {
   return rc;
 }
 
-CassError prepare_insert(CassSession *session, CassString query, const CassPrepared **prepared) {
+CassError prepare_insert(CassSession *session, char* query, const CassPrepared **prepared) {
   CassError rc = CASS_OK;
   CassFuture *future = NULL;
 
@@ -133,9 +135,9 @@ void* process_files(void* args) {
       data = &buf[i+1];
       ccol = strtoll(ccolstr, &endptr, 10);
       statement = cass_prepared_bind(prepared);
-      cass_statement_bind_string(statement, 0, cass_string_init(pkey));
+      cass_statement_bind_string(statement, 0, pkey);
       cass_statement_bind_int64(statement, 1, (cass_int64_t)ccol);
-      cass_statement_bind_string(statement, 2, cass_string_init(data));
+      cass_statement_bind_string(statement, 2, data);
       futures[lineNumber] = cass_session_execute(session, statement);
       cass_statement_free(statement);
       lineNumber++;
@@ -195,12 +197,11 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  char cquery[1000];
-  sprintf(cquery, "INSERT INTO %s.%s (pkey, ccol, data) VALUES (?, ?, ?);", keyspace, tablename);
-  CassString query = cass_string_init(cquery);
+  char query[1000];
+  sprintf(query, "INSERT INTO %s.%s (pkey, ccol, data) VALUES (?, ?, ?);", keyspace, tablename);
   const CassPrepared *prepared;
   if (prepare_insert(session, query, &prepared) != CASS_OK) {
-    fprintf(stderr, "Could not prepare query: %s", cquery);
+    fprintf(stderr, "Could not prepare query: %s", query);
     close_future = cass_session_close(session);
     cass_future_wait(close_future);
     cass_future_free(close_future);
